@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <style>
+        body{
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="home.html">NU-Connect</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="home.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="write_question.html">Ask Question ??</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">About Us</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input id = "searchNote" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+                <button class="btn btn-outline-success" type="submit" style="margin-left: 20px;">Sign Up</button>
+            </div>
+        </div>
+    </nav>
+
+
+
+    <div class="container" id="home_que">
+        <div class="row" style="display: grid; place-items:center;margin: 10px auto;border: #06113C 2px solid;border-radius: 10px;background-color: #9FC088;color: #00092C;">
+            <div class="entity">
+                <div class="heading">
+                    <span id="title" class="title">Title goes here</span>
+                    <span id="username">~UserName</span>
+                </div>
+                <div id="question" class="username">
+                    Question goes here.
+                </div>
+            </div>
+        </div>
+      </div>
+
+
+    <div class="container mt-5 mb-5">
+        <div class="d-flex justify-content-center row">
+            <div class="d-flex flex-column col-md-8">
+                
+                <div class="coment-bottom bg-white p-2 px-4">
+                    <div id="cmtbtn" style="visibility: hidden;" class="d-flex flex-row add-comment-section mt-4 mb-4"><input type="text" id="get_comment" class="form-control mr-3" placeholder="Add comment"><button class="btn btn-primary" id="btn" type="button">Comment</button></div>
+                    <div id="com">
+                        <!-- <div class="commented-section mt-2">
+                            <div class="d-flex flex-row align-items-center commented-user">
+                                <h5 class="mr-2">Corey oates</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">4 hours ago</span>
+                            </div>
+                            <div class="comment-text-sm"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous">
+    </script>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-database-compat.js"></script>
+    <script type="module">
+        const firebaseConfig = {
+            apiKey: "AIzaSyAM-2H9COFO6pZm-zzejjtqtQN9JMlaNi0",
+            authDomain: "nu-connect-7c019.firebaseapp.com",
+            projectId: "nu-connect-7c019",
+            storageBucket: "nu-connect-7c019.appspot.com",
+            messagingSenderId: "679682236652",
+            databaseURL:"https://nu-connect-7c019-default-rtdb.asia-southeast1.firebasedatabase.app/",
+            appId: "1:679682236652:web:3a694529bb4b60bd1205c9"
+        };
+
+        var app = firebase.initializeApp(firebaseConfig)
+        var target = document.getElementById("home_que")
+        var user = localStorage.getItem("currentUser")
+        var questionId = localStorage.getItem("currentQuestion");
+        var title;
+        var question;
+        var comments = []
+
+        
+        firebase.database().ref('question/' + questionId).on('value' , function(snap){
+            console.log(snap.val());
+            comments = JSON.parse(snap.val().comment)
+            title = snap.val().title;
+            question = snap.val().desc;
+
+            document.getElementById("title").innerText = title
+            document.getElementById("username").innerText = "~" + user
+            document.getElementById("question").innerText = question
+            document.getElementById("cmtbtn").style.visibility = "visible";
+            console.log(comments);
+        })
+
+        setTimeout(() => {
+            console.log("Bahar : " , comments);
+            var target = document.getElementById("com")
+            var html = "";
+            comments.forEach(comment => {
+                console.log("Comment : " , comment);
+                html += `
+                    <div class="commented-section mt-2">
+                        <div class="d-flex flex-row align-items-center commented-user">
+                            <h5 class="mr-2">${user}</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">Time goes here.</span>
+                        </div>
+                        <div class="comment-text-sm"><span>${comment.comment}</span></div>
+                    </div>
+                `
+            });
+            target.innerHTML = html;
+            
+        }, 3000);
+
+        document.getElementById("btn").addEventListener("click" , function(){
+            var cmt = document.getElementById("get_comment").value
+            var temp = {
+                username: user,
+                time: 'time',
+                comment: cmt
+            }
+            comments.push(temp)
+            firebase.database().ref('question/' + questionId).update({
+                comment: JSON.stringify(comments)
+            })
+            window.location.reload();
+        });
+
+
+    </script>
+</body>
+</html>
+
