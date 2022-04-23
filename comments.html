@@ -20,7 +20,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-weight: bold; margin:0;">
         <div class="container-fluid" style="background-color:#D1D1D1; margin:0;">
-            <a class="navbar-brand" href="home.html" style="font-size: 1.8rem;">NU-Connect</a>
+            <a class="navbar-brand" href="index.html" style="font-size: 1.8rem;">NU-Connect</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -29,7 +29,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item mx-3">
-                        <a class="nav-link active" aria-current="page" href="home.html">Home</a>
+                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                     </li>
                     <li class="nav-item mx-3">
                         <a class="nav-link active" aria-current="page" href="write_question.html">Ask Question</a>
@@ -42,7 +42,7 @@
                     <input id = "searchNote" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-dark mx-3" type="submit">Search</button>
                 </form>
-                <button class="btn btn-outline-dark" type="submit" style="margin-left: 20px;">Sign Up</button>
+                <button class="btn btn-outline-dark" type="submit" id="signup" style="margin-left: 20px;">Sign Up</button>
             </div>
         </div>
     </nav>
@@ -122,6 +122,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.11/firebase-database-compat.js"></script>
     <script type="module">
+        import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, signInWithPopup, signOut } from "https://www.gstatic.com/firebasejs/9.6.11/firebase-auth.js";
         const firebaseConfig = {
             apiKey: "AIzaSyAM-2H9COFO6pZm-zzejjtqtQN9JMlaNi0",
             authDomain: "nu-connect-7c019.firebaseapp.com",
@@ -178,6 +179,10 @@
             console.log(comments);
         })
 
+        if(localStorage.getItem("currentUser") != null){
+            document.getElementById("signup").innerText = "Sign Out";
+        }
+
         setTimeout(() => {
             console.log("Bahar : " , comments);
             var target = document.getElementById("com")
@@ -197,7 +202,26 @@
             
         }, 3000);
 
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider(app);
         document.getElementById("btn").addEventListener("click" , function(){
+            if(localStorage.getItem("currentUser") == null){
+                signInWithPopup(auth, provider)
+                    .then((result) => {
+                        const credential = GoogleAuthProvider.credentialFromResult(result);
+                        const token = credential.accessToken;
+                        const user = result.user;
+                        localStorage.setItem("currentUser" , user.displayName);
+                        window.location.href = "index.html";
+                    }).catch((error) => {
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        const email = error.email;
+                        const credential = GoogleAuthProvider.credentialFromError(error);
+                        alert(errorMessage);
+                    });
+                return;
+            }
             var cmt = document.getElementById("get_comment").value
             var temp = {
                 username: user,
@@ -211,6 +235,36 @@
             window.location.reload();
         });
 
+        
+        signup.addEventListener('click', (e) => {
+            if(localStorage.getItem("currentUser") == null){
+                signInWithPopup(auth, provider)
+                    .then((result) => {
+                        const credential = GoogleAuthProvider.credentialFromResult(result);
+                        const token = credential.accessToken;
+                        const user = result.user;
+        
+                        localStorage.setItem("currentUser" , user.displayName);
+        
+        
+                    //  alert(user.displayName);
+        
+                        window.location.href = "index.html";
+                    }).catch((error) => {
+        
+                        const errorCode = error.code;
+                        const errorMessage = error.message;
+                        const email = error.email;
+        
+                        const credential = GoogleAuthProvider.credentialFromError(error);
+                        alert(errorMessage);
+                    });
+            }
+            else{
+                localStorage.clear("currentUser");
+                document.getElementById("signup").innerText = "Sign Up"
+            }
+        });
 
     </script>
 </body>
