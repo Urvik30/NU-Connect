@@ -93,8 +93,7 @@
 
         var total;
         function totalEntity(){
-            var arr = []
-            var query = firebase.database().ref("question").orderByKey();
+           /* var query = firebase.database().ref("question").orderByKey();
             query.once("value")
             .then(function(snapshot) {
                 console.log(snapshot);
@@ -110,7 +109,7 @@
                     secret.innerText = total
                     console.log("child : " , childSnapshot);
             });
-            });
+            });*/
             console.log(total);
         }
 
@@ -142,24 +141,42 @@
 
 
         submit.addEventListener('click', (e) => {
-            totalEntity();
-            var questionId = parseInt(document.getElementById("secret").innerText);
-            console.log(questionId);
-            var title = document.getElementById("title").value
-            var question = document.getElementById("question").value
-            var tag = document.getElementById("tag").value
-            var time = "abhi"
-            var username = localStorage.getItem("currentUser");
-            var comment = "comment"
-            // writeUserData(currentEnries , username , time , title , question , tag , comment)
-            firebase.database().ref('question/' + questionId).set({
-                username: username,
-                time: time,
-                title: title,
-                desc: question,
-                tag : tag,
-                comment: comment
-            })
+           // totalEntity();
+            var query = firebase.database().ref("question").orderByKey();
+            query.once("value")
+            .then(function(snapshot) {
+                console.log(snapshot);
+                total = snapshot.length;
+                console.log(snapshot);
+                console.log(typeof(snapshot));
+                document.getElementById("secret").innerText = '0'
+                snapshot.forEach(function(childSnapshot) {
+                    var secret = document.getElementById("secret")
+                    var total = secret.innerText
+                    total = parseInt(total)
+                    total += 1
+                    secret.innerText = total
+                    console.log("child : " , childSnapshot);
+            });
+            }).then(function (){
+                var questionId = parseInt(document.getElementById("secret").innerText);
+                console.log(questionId);
+                var title = document.getElementById("title").value
+                var question = document.getElementById("question").value
+                var tag = document.getElementById("tag").value
+                var time = "abhi"
+                var username = localStorage.getItem("currentUser");
+                var comment = "comment"
+                // writeUserData(currentEnries , username , time , title , question , tag , comment)
+                firebase.database().ref('question/' + questionId).set({
+                    username: username,
+                    time: time,
+                    title: title,
+                    desc: question,
+                    tag : tag,
+                    comment: comment
+                });
+            });
         });
     </script>
 </body>
