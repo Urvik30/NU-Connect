@@ -12,9 +12,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-weight: bold;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="home.html">NU-Connect</a>
+            <a class="navbar-brand" href="home.html" style="font-size: 1.8rem;">NU-Connect</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -22,21 +22,21 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
+                    <li class="nav-item mx-3">
                         <a class="nav-link active" aria-current="page" href="home.html">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="write_question.html">Ask Question ??</a>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link active" aria-current="page" href="write_question.html">Ask Question</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mx-3">
                         <a class="nav-link active" aria-current="page" href="#">About Us</a>
                     </li>
                 </ul>
                 <form class="d-flex">
                     <input id = "searchNote" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <button class="btn btn-outline-dark mx-3" type="submit">Search</button>
                 </form>
-                <button class="btn btn-outline-success" type="submit" style="margin-left: 20px;">Sign Up</button>
+                <button class="btn btn-outline-dark" type="submit" style="margin-left: 20px;">Sign Up</button>
             </div>
         </div>
     </nav>
@@ -44,18 +44,18 @@
 
 
     <div class="container my-3">
-        <h1 class="temp">Write Question</h1>
+        <h1 class="temp" style="margin: 40px 0;">Write Question</h1>
         <div class="card">
             <div class="card-body myClass1">
                 <h5 class="card-title">Title</h5>
-                <input id="title" class="form-control" type="text">
-                <h5 class="card-title">Question</h5>
+                <input id="title" class="form-control" type="text" style="border: #9D9D9D 2px solid;">
+                <h5 class="card-title" style="margin-top: 15px;">Question</h5>
                 <div class="mb-3">
-                    <textarea id="question" class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    <textarea id="question" class="form-control" id="exampleFormControlTextarea1" rows="3" style="border: #9D9D9D 2px solid;"></textarea>
                 </div>
                 <h5 class="card-title">Tag</h5>
-                <input id="tag" placeholder="ex. python , oop , c , cpp" class="form-control" type="text">
-                <button id = "submit" class="btn btn-primary">Submit</button>
+                <input id="tag" placeholder="Ex. Python" class="form-control" type="text" style="border: #9D9D9D 2px solid;">
+                <button id = "submit" class="btn btn-primary" style="margin-top: 20px; background-color:#787A91;border: #9D9D9D 2px solid;">Submit</button>
             </div>
         </div>
     </div>
@@ -139,6 +139,22 @@
             username: "updated"
         })*/
 
+        function getTime(){
+            var currentDate = new Date();
+            var year = currentDate.getFullYear()
+            var month = currentDate.getMonth()
+            var day = currentDate.getDate()
+            var hour = currentDate.getHours()
+            var minute = currentDate.getMinutes()
+            var time = ""
+            time += day + "/"
+            time += month + "/"
+            time += year + "  "
+            time += hour + ":"
+            time += minute
+            return time;
+        }
+
 
         submit.addEventListener('click', (e) => {
            // totalEntity();
@@ -170,12 +186,14 @@
                 // writeUserData(currentEnries , username , time , title , question , tag , comment)
                 firebase.database().ref('question/' + questionId).set({
                     username: username,
-                    time: time,
+                    time: getTime(),
                     title: title,
                     desc: question,
                     tag : tag,
                     comment: comment
                 });
+
+                window.location.href = "home.html";
             });
         });
     </script>

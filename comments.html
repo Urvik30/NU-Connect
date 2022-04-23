@@ -17,9 +17,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-weight: bold;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="home.html">NU-Connect</a>
+            <a class="navbar-brand" href="home.html" style="font-size: 1.8rem;">NU-Connect</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -27,21 +27,21 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
+                    <li class="nav-item mx-3">
                         <a class="nav-link active" aria-current="page" href="home.html">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="write_question.html">Ask Question ??</a>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link active" aria-current="page" href="write_question.html">Ask Question</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mx-3">
                         <a class="nav-link active" aria-current="page" href="#">About Us</a>
                     </li>
                 </ul>
                 <form class="d-flex">
                     <input id = "searchNote" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <button class="btn btn-outline-dark mx-3" type="submit">Search</button>
                 </form>
-                <button class="btn btn-outline-success" type="submit" style="margin-left: 20px;">Sign Up</button>
+                <button class="btn btn-outline-dark" type="submit" style="margin-left: 20px;">Sign Up</button>
             </div>
         </div>
     </nav>
@@ -49,7 +49,7 @@
 
 
     <div class="container" id="home_que">
-        <div class="row" style="display: grid; place-items:center;margin: 10px auto;border: #06113C 2px solid;border-radius: 10px;background-color: #9FC088;color: #00092C;">
+        <!-- <div class="row" style="display: grid; place-items:center;margin: 10px auto;border: #06113C 2px solid;border-radius: 10px;background-color: #9FC088;color: #00092C;">
             <div class="entity">
                 <div class="heading">
                     <span id="title" class="title">Title goes here</span>
@@ -59,8 +59,21 @@
                     Question goes here.
                 </div>
             </div>
+        </div> -->
+        <div class="card my-3" style="border: black 2px solid; border-collapse:collapse;">
+          <div class="card-header" style="border-bottom: black 1px solid;">
+            <span id="title">Title goes here</span>
+          </div>
+          <div class="card-body">
+            <blockquote class="blockquote mb-0">
+              <p id="question">Question goes here</p>
+              <footer class="blockquote-footer"><span id="username">UserName</span><cite title="Source Title" id="time">Time</cite></footer>
+              <footer class="blockquote-footer" id="tag">Tag</footer>
+            </blockquote>
+          </div>
         </div>
       </div>
+
 
 
     <div class="container mt-5 mb-5">
@@ -68,7 +81,7 @@
             <div class="d-flex flex-column col-md-8">
                 
                 <div class="coment-bottom bg-white p-2 px-4">
-                    <div id="cmtbtn" style="visibility: hidden;" class="d-flex flex-row add-comment-section mt-4 mb-4"><input type="text" id="get_comment" class="form-control mr-3" placeholder="Add comment"><button class="btn btn-primary" id="btn" type="button">Comment</button></div>
+                    <div id="cmtbtn" style="visibility: hidden;" class="d-flex flex-row add-comment-section mt-4 mb-4"><input type="text" id="get_comment" class="form-control mr-3" placeholder="Add comment" style="margin-right: 10px;"><button class="btn btn-primary" id="btn" type="button" style="background-color: #787A91;">Comment</button></div>
                     <div id="com">
                         <!-- <div class="commented-section mt-2">
                             <div class="d-flex flex-row align-items-center commented-user">
@@ -126,6 +139,22 @@
         var question;
         var comments = []
 
+        function getTime(){
+            var currentDate = new Date();
+            var year = currentDate.getFullYear()
+            var month = currentDate.getMonth()
+            var day = currentDate.getDate()
+            var hour = currentDate.getHours()
+            var minute = currentDate.getMinutes()
+
+            var time = ""
+            time += day + "/"
+            time += month + "/"
+            time += year + "  "
+            time += hour + ":"
+            time += minute
+            return time;
+        }
         
         firebase.database().ref('question/' + questionId).on('value' , function(snap){
             console.log(snap.val());
@@ -142,6 +171,9 @@
             document.getElementById("username").innerText = "~" + snap.val().username
             document.getElementById("question").innerText = question
             document.getElementById("cmtbtn").style.visibility = "visible";
+            document.getElementById("time").innerText = snap.val().time;
+            document.getElementById("tag").innerText = snap.val().tag;
+
             console.log(comments);
         })
 
@@ -152,9 +184,9 @@
             comments.forEach(comment => {
                 console.log("Comment : " , comment);
                 html += `
-                    <div class="commented-section mt-2">
+                    <div class="commented-section mt-2 my-3">
                         <div class="d-flex flex-row align-items-center commented-user">
-                            <h5 class="mr-2">${comment.username}</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">Time goes here.</span>
+                            <h5 class="mr-2">${comment.username}</h5><span class="mb-1"></span><span class="mb-1 ml-2" style="margin-left:10px;">${comment.time}</span>
                         </div>
                         <div class="comment-text-sm"><span>${comment.comment}</span></div>
                     </div>
@@ -168,7 +200,7 @@
             var cmt = document.getElementById("get_comment").value
             var temp = {
                 username: user,
-                time: 'time',
+                time: getTime(),
                 comment: cmt
             }
             comments.push(temp)

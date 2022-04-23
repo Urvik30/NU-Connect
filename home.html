@@ -17,9 +17,9 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-weight: bold;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="home.html">NU-Connect</a>
+            <a class="navbar-brand" href="home.html" style="font-size: 1.8rem;">NU-Connect</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -27,24 +27,25 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
+                    <li class="nav-item mx-3">
                         <a class="nav-link active" aria-current="page" href="home.html">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="write_question.html">Ask Question ??</a>
+                    <li class="nav-item mx-3">
+                        <a class="nav-link active" aria-current="page" href="write_question.html">Ask Question</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item mx-3">
                         <a class="nav-link active" aria-current="page" href="#">About Us</a>
                     </li>
                 </ul>
                 <form class="d-flex">
                     <input id = "searchNote" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
+                    <button class="btn btn-outline-dark mx-3" type="submit">Search</button>
                 </form>
-                <button class="btn btn-outline-success" type="submit" style="margin-left: 20px;">Sign Up</button>
+                <button class="btn btn-outline-dark" type="submit" style="margin-left: 20px;">Sign Up</button>
             </div>
         </div>
     </nav>
+
 
 
 
@@ -72,8 +73,8 @@
         </div>
     </div> -->
 
-    <div class="container" id="home_que">
-        <!-- <div class="row" style="display: grid; place-items:center;margin: 10px auto;border: #06113C 2px solid;border-radius: 10px;background-color: #9FC088;color: #00092C;">
+    <!-- <div class="container" id="home_que">
+         <div class="row" style="display: grid; place-items:center;margin: 10px auto;border: #06113C 2px solid;border-radius: 10px;background-color: #9FC088;color: #00092C;">
             <div class="entity">
                 <div class="heading">
                     <span class="title">Title goes here</span>
@@ -83,12 +84,45 @@
                     Question goes here.
                 </div>
             </div>
-        </div> -->
+        </div> 
+        
+      </div> -->
+
+      <!-- <div class="container">
+
+          
+      </div> -->
+
+      <!-- <div class="container">
+        <div class="row">
+          <div class="col">
+            Column
+          </div>
+          <div class="col">
+            Column
+          </div>
+          <div class="col">
+            Column
+          </div>
+        </div>
+      </div> -->
+
+      <div class="container">
+        <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1" id="home_que">
+            <div class="col my-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Title</h5>
+                      <h5 class="card-subtitle mb-2 text-muted">Username</h5>
+                      <p class="card-text" style="text-overflow: ellipsis; overflow:hidden; height:100px;">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <span class="card-subtitle mb-2 text-muted">Tag</span><span class="card-subtitle mb-2 text-muted timing">01/01/0001  00:00</span>
+                    </div>
+                  </div>
+            </div>
+            
+            
+        </div>
       </div>
-
-
-
-
 
 
 
@@ -151,7 +185,7 @@
                 var user = localStorage.getItem("currentUser");
                 var childData = childSnapshot.val();
                 console.log(childData);
-                var entity = `
+        /*        var entity = `
                 <div class="row" id="${key}" style="display: grid; place-items:center;margin: 10px auto;border: #06113C 2px solid;border-radius: 10px;background-color: #9FC088;color: #00092C;">
                     <div class="entity">
                         <div class="heading">
@@ -163,7 +197,21 @@
                         </div>
                     </div>
                 </div>
+                `;*/
+
+                var entity = `
+                <div class="col my-3" id=${key} style="background-image: linear-gradient(to up ,#3a0ca3 , white);">
+                    <div class="card" style="width: 18rem;"style="background-image: linear-gradient(to up ,#3a0ca3 , white);">
+                        <div class="card-body" style="background-image: linear-gradient(to top ,#DDDDDD , white); border:#D1D1D1 2px solid; height:220px;">
+                          <h5 class="card-title" style="font-size:1.4rem">${childData.title}</h5>
+                          <h5 class="card-subtitle mb-2 text-muted" style="font-size:0.8rem">~${childData.username}</h5>
+                          <p class="card-text"  style="text-overflow: ellipsis; overflow:hidden;height:100px;">${childData.desc}</p>
+                          <span class="card-subtitle mb-2 text-muted">${childData.tag}</span><span class="card-subtitle mb-2 text-muted timing">${childData.time}</span>
+                        </div>
+                      </div>
+                </div>
                 `;
+
                 target.innerHTML += entity;
             });
             console.log(target.innerHTML);
