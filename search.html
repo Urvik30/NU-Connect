@@ -48,36 +48,28 @@
     </nav>
 
 
-
-    <div class="container" id="home_que">
-        <div class="card my-3" style="border: black 2px solid; border-collapse:collapse;">
-          <div class="card-header" style="border-bottom: black 1px solid;">
-            <span id="title">Title goes here</span>
-          </div>
-          <div class="card-body">
-            <blockquote class="blockquote mb-0">
-              <p id="question">Question goes here</p>
-              <footer class="blockquote-footer"><span id="username">UserName</span><cite title="Source Title" id="time" style="margin-left: 10px;">Time</cite></footer>
-              <footer class="blockquote-footer" id="tag">Tag</footer>
-            </blockquote>
-          </div>
+      <div class="container">
+        <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1" id="home_que">
+            <div class="col my-3">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                      <h5 class="card-title">Title</h5>
+                      <h5 class="card-subtitle mb-2 text-muted">Username</h5>
+                      <p class="card-text" style="text-overflow: ellipsis; overflow:hidden; height:100px;">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                      <span class="card-subtitle mb-2 text-muted">Tag</span><span class="card-subtitle mb-2 text-muted timing">01/01/0001  00:00</span>
+                    </div>
+                  </div>
+            </div>
+            
+            
         </div>
       </div>
 
 
+      <p id="secret">0</p>
 
-    <div class="container mt-5 mb-5">
-        <div class="d-flex justify-content-center row">
-            <div class="d-flex flex-column col-md-8">
-                
-                <div class="coment-bottom bg-white p-2 px-4">
-                    <div id="cmtbtn" style="visibility: hidden;" class="d-flex flex-row add-comment-section mt-4 mb-4"><input type="text" id="get_comment" class="form-control mr-3" placeholder="Add comment" style="margin-right: 10px;"><button class="btn btn-primary" id="btn" type="button" style="background-color: #787A91;">Comment</button></div>
-                    <div id="com">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
@@ -99,7 +91,6 @@
             appId: "1:679682236652:web:3a694529bb4b60bd1205c9"
         };
 
-        
         document.getElementById("searchBtn").addEventListener("click" , function(){
             var tag = document.getElementById("searchTag").value;
             localStorage.setItem("searchMe" , tag);
@@ -107,109 +98,72 @@
             window.location.href = "search.html";
         });
 
-        var app = firebase.initializeApp(firebaseConfig)
-        var target = document.getElementById("home_que")
-        var user = localStorage.getItem("currentUser")
-        var questionId = localStorage.getItem("currentQuestion");
-        var title;
-        var question;
-        var comments = []
-
-        function getTime(){
-            var currentDate = new Date();
-            var year = currentDate.getFullYear()
-            var month = currentDate.getMonth()
-            var day = currentDate.getDate()
-            var hour = currentDate.getHours()
-            var minute = currentDate.getMinutes()
-
-            var time = ""
-            time += day + "/"
-            time += month + "/"
-            time += year + "  "
-            time += hour + ":"
-            time += minute
-            return time;
-        }
-        
-        firebase.database().ref('question/' + questionId).on('value' , function(snap){
-            console.log(snap.val());
-            try{
-                comments = JSON.parse(snap.val().comment)
-            }
-            catch(e){
-                console.log("Maine bacha liya");
-            }
-            title = snap.val().title;
-            question = snap.val().desc;
-
-            document.getElementById("title").innerText = title
-            document.getElementById("username").innerText = snap.val().username
-            document.getElementById("question").innerText = question
-            document.getElementById("cmtbtn").style.visibility = "visible";
-            document.getElementById("time").innerText = snap.val().time;
-            document.getElementById("tag").innerText = snap.val().tag;
-
-            console.log(comments);
-        })
-
         if(localStorage.getItem("currentUser") != null){
             document.getElementById("signup").innerText = "Sign Out";
         }
 
-        setTimeout(() => {
-            console.log("Bahar : " , comments);
-            var target = document.getElementById("com")
-            var html = "";
-            comments.forEach(comment => {
-                console.log("Comment : " , comment);
-                html += `
-                    <div class="commented-section mt-2 my-3">
-                        <div class="d-flex flex-row align-items-center commented-user">
-                            <h5 class="mr-2">${comment.username}</h5><span class="mb-1"></span><span class="mb-1 ml-2" style="margin-left:10px;">${comment.time}</span>
-                        </div>
-                        <div class="comment-text-sm"><span>${comment.comment}</span></div>
+        var app = firebase.initializeApp(firebaseConfig)
+        var target = document.getElementById("home_que")
+        var query = firebase.database().ref("question").orderByKey();
+        var secret = document.getElementById("secret")
+        var word = localStorage.getItem("searchMe")
+        query.once("value")
+        .then(function(snapshot) {
+            target.innerHTML = ""
+            secret.innerText = JSON.stringify([]);
+            snapshot.forEach(function(childSnapshot) {
+                var key = childSnapshot.key;
+                var user = localStorage.getItem("currentUser");
+                var childData = childSnapshot.val();
+                var childTag = childSnapshot.val().tag;
+                if(word == childTag || word == null || word.length == 0 || word == undefined){
+                    var old = JSON.parse(secret.innerText);
+                    old.push(key);
+                    secret.innerText = JSON.stringify(old);
+                    var entity = `
+                    <div class="col my-3" id=${key} style="background-image: linear-gradient(to up ,#3a0ca3 , white);">
+                        <div class="card" style="width: 18rem;"style="background-image: linear-gradient(to up ,#3a0ca3 , white);">
+                            <div class="card-body" style="background-image: linear-gradient(to top ,#DDDDDD , white); border:#D1D1D1 2px solid; height:220px;">
+                              <h5 class="card-title" style="font-size:1.4rem">${childData.title}</h5>
+                              <h5 class="card-subtitle mb-2 text-muted" style="font-size:0.8rem">~${childData.username}</h5>
+                              <p class="card-text"  style="text-overflow: ellipsis; overflow:hidden;height:100px;">${childData.desc}</p>
+                              <span class="card-subtitle mb-2 text-muted">${childData.tag}</span><span class="card-subtitle mb-2 text-muted timing">${childData.time}</span>
+                            </div>
+                          </div>
                     </div>
-                `
+                    `;
+    
+                    target.innerHTML += entity;
+                } 
+                console.log(childData);
             });
-            target.innerHTML = html;
-            
-        }, 3000);
+            console.log(target.innerHTML);
+        }).then(runMeAfterThis);
+
+        function runMeAfterThis(){
+            console.log(document.getElementById("secret").innerText);
+            var ids = JSON.parse(document.getElementById("secret").innerText)
+            for(var i=0;i<=ids.length;i++){
+                try{
+                    document.getElementById(ids[i]).addEventListener("click" , function(){
+                        tempfunc(this.id);
+                    })
+                }
+                catch(e){
+                    console.log("value of I : " , i);
+                    break;
+                }
+            }
+        }
+
+        function tempfunc(questionId){
+            console.log("Question : " , questionId);
+            localStorage.setItem("currentQuestion" , questionId)
+            window.location.href = "comments.html"
+        }
 
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider(app);
-        document.getElementById("btn").addEventListener("click" , function(){
-            if(localStorage.getItem("currentUser") == null){
-                signInWithPopup(auth, provider)
-                    .then((result) => {
-                        const credential = GoogleAuthProvider.credentialFromResult(result);
-                        const token = credential.accessToken;
-                        const user = result.user;
-                        localStorage.setItem("currentUser" , user.displayName);
-                        window.location.href = "index.html";
-                    }).catch((error) => {
-                        const errorCode = error.code;
-                        const errorMessage = error.message;
-                        const email = error.email;
-                        const credential = GoogleAuthProvider.credentialFromError(error);
-                        alert(errorMessage);
-                    });
-                return;
-            }
-            var cmt = document.getElementById("get_comment").value
-            var temp = {
-                username: user,
-                time: getTime(),
-                comment: cmt
-            }
-            comments.push(temp)
-            firebase.database().ref('question/' + questionId).update({
-                comment: JSON.stringify(comments)
-            })
-            window.location.reload();
-        });
-
-        
         signup.addEventListener('click', (e) => {
             if(localStorage.getItem("currentUser") == null){
                 signInWithPopup(auth, provider)
@@ -220,7 +174,7 @@
         
                         localStorage.setItem("currentUser" , user.displayName);
         
-        
+
                         window.location.href = "index.html";
                     }).catch((error) => {
         
@@ -237,7 +191,6 @@
                 document.getElementById("signup").innerText = "Sign Up"
             }
         });
-
     </script>
 </body>
 </html>

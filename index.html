@@ -20,7 +20,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-weight: bold; margin:0;">
         <div class="container-fluid" style="background-color:#D1D1D1; margin:0;">
-            <a class="navbar-brand" href="home.html" style="font-size: 1.8rem;">NU-Connect</a>
+            <a class="navbar-brand" href="index.html" style="font-size: 1.8rem;">NU-Connect</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
@@ -29,7 +29,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item mx-3">
-                        <a class="nav-link active" aria-current="page" href="home.html">Home</a>
+                        <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                     </li>
                     <li class="nav-item mx-3">
                         <a class="nav-link active" aria-current="page" href="write_question.html">Ask Question</a>
@@ -38,75 +38,15 @@
                         <a class="nav-link active" aria-current="page" href="#">About Us</a>
                     </li>
                 </ul>
-                <form class="d-flex">
-                    <input id = "searchNote" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-dark mx-3" type="submit">Search</button>
-                </form>
+                <div class="d-flex">
+                    <input id="searchTag" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-dark mx-3" id="searchBtn" type="submit">Search</button>
+                </div>
                 <button class="btn btn-outline-dark" type="submit" id="signup" style="margin-left: 20px;">Sign Up</button>
             </div>
         </div>
     </nav>
 
-
-
-
-
-
-    <!-- <div class="container mt-5 mb-5">
-        <div class="d-flex justify-content-center row">
-            <div class="d-flex flex-column col-md-8">
-                
-                <div class="coment-bottom bg-white p-2 px-4">
-                    <div class="d-flex flex-row add-comment-section mt-4 mb-4"><input type="text" class="form-control mr-3" placeholder="Add comment"><button class="btn btn-primary" type="button">Comment</button></div>
-                    <div class="commented-section mt-2">
-                        <div class="d-flex flex-row align-items-center commented-user">
-                            <h5 class="mr-2">Corey oates</h5><span class="dot mb-1"></span><span class="mb-1 ml-2">4 hours ago</span>
-                        </div>
-                        <div class="comment-text-sm"><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span></div>
-                        <div class="reply-section">
-                            <div class="d-flex flex-row align-items-center voting-icons"><i class="fa fa-sort-up fa-2x mt-3 hit-voting"></i><i class="fa fa-sort-down fa-2x mb-3 hit-voting"></i><span class="ml-2">10</span><span class="dot ml-2"></span>
-                                <h6 class="ml-2 mt-1">Reply</h6>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- <div class="container" id="home_que">
-         <div class="row" style="display: grid; place-items:center;margin: 10px auto;border: #06113C 2px solid;border-radius: 10px;background-color: #9FC088;color: #00092C;">
-            <div class="entity">
-                <div class="heading">
-                    <span class="title">Title goes here</span>
-                    <span class="username">~UserName</span>
-                </div>
-                <div class="question">
-                    Question goes here.
-                </div>
-            </div>
-        </div> 
-        
-      </div> -->
-
-      <!-- <div class="container">
-
-          
-      </div> -->
-
-      <!-- <div class="container">
-        <div class="row">
-          <div class="col">
-            Column
-          </div>
-          <div class="col">
-            Column
-          </div>
-          <div class="col">
-            Column
-          </div>
-        </div>
-      </div> -->
 
       <div class="container">
         <div class="row row-cols-lg-4 row-cols-md-2 row-cols-sm-1" id="home_que">
@@ -165,22 +105,6 @@
         var target = document.getElementById("home_que")
         var query = firebase.database().ref("question").orderByKey();
 
-     /*   var comments = [
-            {
-                username: 'ju',
-                comment: 'c1',
-                time: 'time'
-            },
-            {
-                username: 'urvik',
-                comment: 'c2',
-                time: 'time'
-            },
-        ];
-
-        firebase.database().ref('question/' + '1').update({
-            comment: JSON.stringify(comments)
-        })*/
 
 
         query.once("value")
@@ -191,19 +115,7 @@
                 var user = localStorage.getItem("currentUser");
                 var childData = childSnapshot.val();
                 console.log(childData);
-        /*        var entity = `
-                <div class="row" id="${key}" style="display: grid; place-items:center;margin: 10px auto;border: #06113C 2px solid;border-radius: 10px;background-color: #9FC088;color: #00092C;">
-                    <div class="entity">
-                        <div class="heading">
-                            <span class="title">${childData.title}</span>
-                            <span class="username">~${childData.username}</span>
-                        </div>
-                        <div class="question">
-                            ${childData.desc}
-                        </div>
-                    </div>
-                </div>
-                `;*/
+
 
                 var entity = `
                 <div class="col my-3" id=${key} style="background-image: linear-gradient(to up ,#3a0ca3 , white);">
@@ -222,6 +134,15 @@
             });
             console.log(target.innerHTML);
         }).then(runMeAfterThis);
+
+        
+        
+        document.getElementById("searchBtn").addEventListener("click" , function(){
+            var tag = document.getElementById("searchTag").value;
+            localStorage.setItem("searchMe" , tag);
+            console.log("tag : " , tag);
+            window.location.href = "search.html";
+        });
 
         function runMeAfterThis(){
             for(var i=0;i<=100000;i++){
@@ -256,9 +177,7 @@
                         localStorage.setItem("currentUser" , user.displayName);
         
         
-                    //  alert(user.displayName);
-        
-                        window.location.href = "home.html";
+                        window.location.href = "index.html";
                     }).catch((error) => {
         
                         const errorCode = error.code;
